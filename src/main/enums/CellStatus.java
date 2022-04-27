@@ -1,6 +1,6 @@
 package main.enums;
 
-public enum NodeStatus {
+public enum CellStatus {
     HIDDEN,
     FLAGGED,
     OPENED
