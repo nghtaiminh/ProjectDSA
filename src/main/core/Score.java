@@ -1,9 +1,7 @@
+package main.core;
 import java.io.Serializable;
-
-
 public class Score implements Comparable<Score>, Serializable {
-
-
+	
 	private static final long serialVersionUID = -6220082138832090333L;
 	private double ratio;
 	private int time, rows, columns, mines;
