@@ -83,7 +83,7 @@ public class MineField {
         }
     }
 
-    public int[] updateMineFiled(int clickedRow, int clickedCol) {
+    public int[] updateMineField(int clickedRow, int clickedCol) {
         if (mineField[clickedRow][clickedCol].isMine() && mineField[clickedRow][clickedCol].isHidden()) {
             revealAllCells();
             mineFieldStatus = MineFieldStatus.EXPLODED;
