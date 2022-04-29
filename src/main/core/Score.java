@@ -7,7 +7,13 @@ public class Score implements Comparable<Score>, Serializable {
 	private int time, rows, columns, mines;
 	private String name;
 	
-
+	/** Constructor for Score
+	 * @param rows The number of rows of tiles
+	 * @param columns The number of columns of tiles
+	 * @param mines The number of mines
+	 * @param time The amount of time it took to win
+	 * @param name The name of the player who won
+	 */
 	public Score(int rows, int columns, int mines, int time, String name) {
 		
 		ratio = ((double) mines) / (rows * columns);
