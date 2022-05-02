@@ -127,7 +127,7 @@ public class MineField {
     /**
      * Print the minefield on matrix, mainly for testing
      */
-    public void displayMindField() {
+    public void displayMineField() {
         for (int row = 0; row < GRID_HEIGHT; row++) {
             for (int col = 0; col < GRID_WIDTH; col++) {
                 if (mineField[row][col].isHidden()) {
