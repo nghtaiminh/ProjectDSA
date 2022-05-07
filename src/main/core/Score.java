@@ -1,4 +1,5 @@
 package main.core;
+
 import java.io.Serializable;
 public class Score implements Comparable<Score>, Serializable {
 	
@@ -23,7 +24,6 @@ public class Score implements Comparable<Score>, Serializable {
 		this.mines = mines;
 		this.name = name;
 	}
-	
 
 	@Override
 	public int compareTo(Score other) {
