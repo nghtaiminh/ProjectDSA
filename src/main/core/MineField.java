@@ -13,13 +13,14 @@ public class MineField {
     private final int GRID_HEIGHT;
     private final int numMines;
     private int remainingMines;
+    private boolean firstClick = true;
 
     private Cell[][] mineField;
 
     private MineFieldStatus mineFieldStatus = MineFieldStatus.NOT_CLEARED;
     private final Difficulty difficulty;
 
-    int[][] directions = new int[][] {{-1,0},{1,0},{0,-1},{0,1},{-1,-1},{1,1},{-1,1},{1,-1}};
+    private int[][] directions = new int[][] {{-1,0},{1,0},{0,-1},{0,1},{-1,-1},{1,1},{-1,1},{1,-1}};
 
     public MineField(Difficulty difficulty) {
         this.difficulty = difficulty;
@@ -29,15 +30,13 @@ public class MineField {
         this.remainingMines = difficulty.getNumberOfMines();
         mineField = new Cell[GRID_HEIGHT][GRID_WIDTH];
 
-        createMineField();
-        generateMines();
-        generateMineNumber();
+        createEmptyMineField();
     }
 
     /**
      * Initialize the minefield with an empty grid
      * */
-    public void createMineField() {
+    public void createEmptyMineField() {
         for (int row = 0; row < GRID_HEIGHT; row++) {
             for (int col = 0; col < GRID_WIDTH; col++) {
                 mineField[row][col] = new Cell(row, col);
@@ -46,16 +45,16 @@ public class MineField {
     }
 
     /**
-     * Select random cells as mine
+     * Select random cells as mine except the first click
      */
-    public void generateMines() {
+    public void generateMines(int clickedRow, int clickedCol) {
         int countMines = 0;
         Random rand = new Random();
         while (countMines < numMines) {
             int col = rand.nextInt(GRID_WIDTH);
             int row = rand.nextInt(GRID_HEIGHT);
 
-            if (!mineField[row][col].isMine()) {
+            if (!mineField[row][col].isMine() && !(col == clickedCol && row == clickedRow)) {
                 mineField[row][col].setMine(true);
                 countMines++;
             }
@@ -93,6 +92,13 @@ public class MineField {
      * @return
      */
     public int[] updateMineField(int clickedRow, int clickedCol) {
+        if(firstClick){
+            generateMines(clickedRow, clickedCol);
+            generateMineNumber();
+            firstClick = false;
+            updateMineField(clickedRow, clickedCol);
+        }
+
         if (mineField[clickedRow][clickedCol].isMine() && mineField[clickedRow][clickedCol].isHidden()) {
             revealAllMines();
             mineFieldStatus = MineFieldStatus.EXPLODED;
@@ -219,4 +225,7 @@ public class MineField {
        return mineFieldStatus;
     }
 
+    public int getRemainingMines() {
+        return remainingMines;
+    }
 }
