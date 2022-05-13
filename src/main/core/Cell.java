@@ -2,7 +2,9 @@ package main.core;
 
 import main.enums.CellStatus;
 
-public class Cell {
+import java.io.Serializable;
+
+public class Cell implements Serializable {
     public int row;
     public int col;
     private boolean isMine;

@@ -4,18 +4,22 @@ import main.enums.MineFieldStatus;
 import main.enums.Difficulty;
 import main.enums.CellStatus;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-public class MineField {
-    private final int GRID_WIDTH;
-    private final int GRID_HEIGHT;
+import org.apache.commons.lang3.SerializationUtils;
+
+public class MineField implements Serializable {
+    public final int GRID_WIDTH;
+    public final int GRID_HEIGHT;
     private final int numMines;
     private int remainingMines;
     private boolean firstClick = true;
 
     private Cell[][] mineField;
+    private Cell[][] prevMineField;
 
     private MineFieldStatus mineFieldStatus = MineFieldStatus.NOT_CLEARED;
     private final Difficulty difficulty;
@@ -99,6 +103,11 @@ public class MineField {
             updateMineField(clickedRow, clickedCol);
         }
 
+        prevMineField = SerializationUtils.clone(mineField);
+
+        if (mineField[clickedRow][clickedCol].isFlagged())
+            return new int[] {clickedRow, clickedCol};
+
         if (mineField[clickedRow][clickedCol].isMine() && mineField[clickedRow][clickedCol].isHidden()) {
             revealAllMines();
             mineFieldStatus = MineFieldStatus.EXPLODED;
@@ -168,6 +177,10 @@ public class MineField {
         return isWon;
     }
 
+    public void undo() {
+        mineField = SerializationUtils.clone(prevMineField);
+    }
+
     public void setMineFieldStatus(MineFieldStatus status) {
         this.mineFieldStatus = status;
     }
@@ -179,43 +192,39 @@ public class MineField {
     /**
      * Print the minefield on terminal, mainly for testing
      */
-//    public void displayMineField() {
-//        for (int row = 0; row < GRID_HEIGHT; row++) {
-//            for (int col = 0; col < GRID_WIDTH; col++) {
-//                if (mineField[row][col].isHidden()) {
-//                    System.out.print("H");
-//                }
-//                else if (mineField[row][col].isFlagged()) {
-//                    System.out.print("F");
-//                }
-//                else {
-//                    if (mineField[row][col].isMine()) {
-//                        System.out.print("M");
-//                    }
-//                    else {
-//                        if (mineField[row][col].getNumAdjacentMines() > 0) {
-//                            System.out.print(mineField[row][col].getNumAdjacentMines());
-//                        }
-//                        else {
-//                            System.out.print(" ");
-//                        }
-//                    }
-//                }
-//                System.out.print(" | ");
-//            }
-//            System.out.println();
-//        }
-//    }
-
-    public void setFlag(int row, int col) {
-        if (mineField[row][col].isHidden() && !mineField[row][col].isFlagged()) {
-            mineField[row][col].setCellStatus(CellStatus.FLAGGED);
-            remainingMines--;
+    public void displayMineField() {
+        for (int row = 0; row < GRID_HEIGHT; row++) {
+            for (int col = 0; col < GRID_WIDTH; col++) {
+                if (mineField[row][col].isHidden()) {
+                    System.out.print("H");
+                }
+                else if (mineField[row][col].isFlagged()) {
+                    System.out.print("F");
+                }
+                else {
+                    if (mineField[row][col].isMine()) {
+                        System.out.print("M");
+                    }
+                    else {
+                        if (mineField[row][col].getNumAdjacentMines() > 0) {
+                            System.out.print(mineField[row][col].getNumAdjacentMines());
+                        }
+                        else {
+                            System.out.print(" ");
+                        }
+                    }
+                }
+                System.out.print(" | ");
+            }
+            System.out.println();
         }
     }
 
-    public void removeFlag(int row, int col) {
-        if (mineField[row][col].isFlagged()) {
+    public void setOrRemoveFlag(int row, int col) {
+        if (mineField[row][col].isHidden()) {
+            mineField[row][col].setCellStatus(CellStatus.FLAGGED);
+            remainingMines--;
+        } else if (mineField[row][col].isFlagged()) {
             mineField[row][col].setCellStatus(CellStatus.HIDDEN);
             remainingMines++;
         }
@@ -227,5 +236,9 @@ public class MineField {
 
     public int getRemainingMines() {
         return remainingMines;
+    }
+
+    public Cell[][] getListCell() {
+        return mineField;
     }
 }
