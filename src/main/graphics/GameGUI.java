@@ -69,6 +69,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         mineField.updateMineField(row, col);
         mineFieldPanel.updateMineFieldPanel();
         // [TODO]: Check if the player has won after revealing a cell
+        
+        // (mineField.hasWon() == true)? //Allow no click : // allow next click
     }
 
     @Override
@@ -80,6 +82,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     @Override
     public void undo() {
         // [TODO]: Implement undo
+
     }
 }
 
