@@ -103,10 +103,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     class addButtonListenerUNDO implements ActionListener
     {
       public void actionPerformed(ActionEvent ae) {
-        mineField.undo();
-        initComponent();
-        addComponent();
-        addEvent();
+        undo();
         repaint();
         printAll(getGraphics());//Extort print all content
       }
@@ -184,16 +181,16 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         undoButton = new JButton("Undo");
         undoButton.addActionListener(new addButtonListenerUNDO());
-        undoButton.setBounds(0,0,100,30);
+        undoButton.setBounds(10,0,100,30);
         add(undoButton);
 
         resetButton = new JButton("Reset");
         resetButton.addActionListener(new addButtonListenerRESET());
-        resetButton.setBounds(100 + spacing,0,100,30);
+        resetButton.setBounds(110 + spacing,0,100,30);
         add(resetButton);
 
         timerButton = new JButton();
-        timerButton.setBounds(200 + spacing*2,0,100,30);
+        timerButton.setBounds(210 + spacing*2,0,100,30);
         second = 0;
         setTimer();
         timer.start();
@@ -201,7 +198,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         backButton = new JButton("Go back");
         backButton.addActionListener(new addButtonListenerBACK());
-        backButton.setBounds(300+spacing*3,0,100,30);
+        backButton.setBounds(310+spacing*3,0,100,30);
         add(backButton);
 
         mineFieldPanel.addListener(this);
@@ -213,8 +210,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         WindowListener wd = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
-            int kq = JOptionPane.showConfirmDialog(GameGUI.this, "Do you really want to quit?","Quit?", JOptionPane.YES_NO_OPTION);
-            if (kq == JOptionPane.YES_OPTION) {
+            int out = JOptionPane.showConfirmDialog(GameGUI.this, "Do you really want to quit?","Quit?", JOptionPane.YES_NO_OPTION);
+            if (out == JOptionPane.YES_OPTION) {
                 dispose();
             }
         }
@@ -232,7 +229,9 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         mineField.updateMineField(row, col);
         mineFieldPanel.updateMineFieldPanel();
         // [TODO]: Check if the player has won after revealing a cell
-        
+        if (mineField.hasWon()){
+            JOptionPane.showMessageDialog(GameGUI.this,"You won");
+        };
         // (mineField.hasWon() == true)? //Allow no click : // allow next click
     }
 
