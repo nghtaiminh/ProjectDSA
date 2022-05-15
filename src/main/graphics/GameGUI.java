@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 
 import main.core.Cell;
 import main.core.MineField;
@@ -26,8 +27,9 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     private MineFieldPanel mineFieldPanel;
 
     public JPanel introPanel;
-    public JButton easy,med,hard,buttonSample;
-    int spacing = 5;
+    public JButton easy,med,hard,buttonSample,undoButton,resetButton,timerButton,backButton;
+    public Timer timer;
+    public int spacing = 5, second;
 
     public GameGUI(){
         initComponent();
@@ -69,7 +71,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     {
       public void actionPerformed(ActionEvent ae) {
         getContentPane().removeAll();
-        initAll(Difficulty.EASY);
+        level = Difficulty.EASY;
+        initAll(level);
         repaint();
         printAll(getGraphics());//Extort print all content
       }
@@ -79,7 +82,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     {
       public void actionPerformed(ActionEvent ae) {
         getContentPane().removeAll();
-        initAll(Difficulty.MEDIUM);
+        level = Difficulty.MEDIUM;
+        initAll(level);
         repaint();
         printAll(getGraphics());//Extort print all content
       }
@@ -89,7 +93,58 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     {
       public void actionPerformed(ActionEvent ae) {
         getContentPane().removeAll();
-        initAll(Difficulty.HARD);
+        level = Difficulty.HARD;
+        initAll(level);
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    class addButtonListenerUNDO implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        mineField.undo();
+        initComponent();
+        addComponent();
+        addEvent();
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    class addButtonListenerRESET implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        getContentPane().removeAll();
+        initAll(level);
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    public void setTimer(){
+        timer = new Timer(1000, new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                second++;
+
+                timerButton.setText("" + second);
+            }
+
+        });
+    }
+
+    class addButtonListenerBACK implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        getContentPane().removeAll();
+        FRAME_WIDTH = 500;
+        FRAME_HEIGHT = 500;
+        initComponent();
+        createPanel();
+        addPanel();
         repaint();
         printAll(getGraphics());//Extort print all content
       }
@@ -126,15 +181,39 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         mineFieldPanel = new MineFieldPanel(level);
         mineFieldPanel.setBounds(10, 40, FRAME_WIDTH, FRAME_HEIGHT);
         add(mineFieldPanel);
+
+        undoButton = new JButton("Undo");
+        undoButton.addActionListener(new addButtonListenerUNDO());
+        undoButton.setBounds(0,0,100,30);
+        add(undoButton);
+
+        resetButton = new JButton("Reset");
+        resetButton.addActionListener(new addButtonListenerRESET());
+        resetButton.setBounds(100 + spacing,0,100,30);
+        add(resetButton);
+
+        timerButton = new JButton();
+        timerButton.setBounds(200 + spacing*2,0,100,30);
+        second = 0;
+        setTimer();
+        timer.start();
+        add(timerButton);
+
+        backButton = new JButton("Go back");
+        backButton.addActionListener(new addButtonListenerBACK());
+        backButton.setBounds(300+spacing*3,0,100,30);
+        add(backButton);
+
         mineFieldPanel.addListener(this);
     }
+
 
     @Override
     public void addEvent() {
         WindowListener wd = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
-            int kq = JOptionPane.showConfirmDialog(GameGUI.this, "Bạn có muốn thoát không?","Thông báo", JOptionPane.YES_NO_OPTION);
+            int kq = JOptionPane.showConfirmDialog(GameGUI.this, "Do you really want to quit?","Quit?", JOptionPane.YES_NO_OPTION);
             if (kq == JOptionPane.YES_OPTION) {
                 dispose();
             }
