@@ -2,6 +2,14 @@ package main.graphics;
 
 import javax.swing.*;
 
+import org.apache.commons.lang3.builder.Diff;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 import main.core.Cell;
 import main.core.MineField;
 import main.enums.Difficulty;
@@ -11,13 +19,83 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     private static Difficulty level;
     private static final String TITLE = "Minesweeper";
     private static final int cellSize = 50;
-    private static int FRAME_WIDTH;
-    private static int FRAME_HEIGHT;
+    private static int FRAME_WIDTH = 500;
+    private static int FRAME_HEIGHT = 500;
 
     private MineField mineField;
     private MineFieldPanel mineFieldPanel;
 
-    public GameGUI(Difficulty difficulty){
+    public JPanel introPanel;
+    public JButton easy,med,hard,buttonSample;
+    int spacing = 5;
+
+    public GameGUI(){
+        initComponent();
+        createPanel();
+        addPanel();
+    }
+
+    private void createPanel()
+    {
+      introPanel = new JPanel();
+      introPanel.setBounds(0,0,500,500);
+    //   buttonSample = new JButton("Hello");
+    //   buttonSample.addActionListener(new addButtonListener());
+    //   buttonSample.setBounds(50, 90, 190, 30);
+
+      easy = new JButton("Easy");
+      med = new JButton("Medium");
+      hard = new JButton("Hard");
+
+      easy.addActionListener(new addButtonListenerEASY());
+      med.addActionListener(new addButtonListenerMED());
+      hard.addActionListener(new addButtonListenerHARD());
+
+    //   easy.setBounds(0,50,100,100);
+    //   med.setBounds(100+spacing,50,100,100);
+    //   hard.setBounds(200+spacing*2,50,100,100);
+    
+    }
+  
+    private void addPanel()
+    {
+        introPanel.add(easy);
+        introPanel.add(med);
+        introPanel.add(hard);
+        add(introPanel);
+    }
+
+    class addButtonListenerEASY implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        getContentPane().removeAll();
+        initAll(Difficulty.EASY);
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    class addButtonListenerMED implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        getContentPane().removeAll();
+        initAll(Difficulty.MEDIUM);
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    class addButtonListenerHARD implements ActionListener
+    {
+      public void actionPerformed(ActionEvent ae) {
+        getContentPane().removeAll();
+        initAll(Difficulty.HARD);
+        repaint();
+        printAll(getGraphics());//Extort print all content
+      }
+    }
+
+    public void initAll(Difficulty difficulty){
         level = difficulty;
         mineField = new MineField(level);
         FRAME_HEIGHT = cellSize * difficulty.getGridHeight();
@@ -26,10 +104,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         initComponent();
         addComponent();
         addEvent();
-
     }
-
-
 
     @Override
     public void initComponent() {
@@ -56,7 +131,16 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
     @Override
     public void addEvent() {
-
+        WindowListener wd = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            int kq = JOptionPane.showConfirmDialog(GameGUI.this, "Bạn có muốn thoát không?","Thông báo", JOptionPane.YES_NO_OPTION);
+            if (kq == JOptionPane.YES_OPTION) {
+                dispose();
+            }
+        }
+        };
+        addWindowListener(wd);
     }
 
     @Override

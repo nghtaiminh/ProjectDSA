@@ -7,7 +7,7 @@ public class Main {
     private static AudioPlayer sound = new AudioPlayer();
 
     public static void main(String[] args) {
-        GameGUI gui = new GameGUI(Difficulty.EASY);
+        GameGUI gui = new GameGUI();
         gui.setVisible(true);
     }
 }
