@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class AudioPlayer {
-    //Declare audio files location 
+    //Declare audio files location
     private String gameoverPath = "main/assets/sound" + File.separator + "gameover.wav";
     private Clip gameoverSound;
     public AudioPlayer(){
@@ -16,7 +16,7 @@ public class AudioPlayer {
                 gameoverSound = AudioSystem.getClip();
                 gameoverSound.open(AudioSystem.getAudioInputStream(new File(gameoverPath).getAbsoluteFile()));
             }
-            //Exceptions handling for audio file types 
+            //Exceptions handling for audio file types
             catch (LineUnavailableException ex) {
                 Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

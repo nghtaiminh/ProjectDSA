@@ -178,7 +178,10 @@ public class MineField implements Serializable {
     }
 
     public void undo() {
-        mineField = SerializationUtils.clone(prevMineField);
+        if (!firstClick && mineFieldStatus == MineFieldStatus.EXPLODED){
+            mineField = SerializationUtils.clone(prevMineField);
+            mineFieldStatus = MineFieldStatus.NOT_CLEARED;
+        }
     }
 
     public void setMineFieldStatus(MineFieldStatus status) {
