@@ -132,7 +132,7 @@ public class MineField implements Serializable {
                     int nextRow = curRow + dir[0];
                     int nextCol = curCol + dir[1];
 
-                    if (isValidCell(nextCol, nextRow) && !visitedCells[nextRow][nextCol] && mineField[nextRow][nextCol].isHidden() && !mineField[nextRow][nextCol].isMine()) {
+                    if (isValidCell(nextRow, nextCol) && !visitedCells[nextRow][nextCol] && mineField[nextRow][nextCol].isHidden() && !mineField[nextRow][nextCol].isMine()) {
                         queue.offer(new int[] {nextRow,nextCol});
                         visitedCells[nextRow][nextCol] = true;
                     }
@@ -188,8 +188,8 @@ public class MineField implements Serializable {
         this.mineFieldStatus = status;
     }
 
-    public boolean isValidCell(int x, int y) {
-        return (y >= 0) && (y < GRID_HEIGHT) && (x >= 0) && (x < GRID_WIDTH);
+    public boolean isValidCell(int row, int col) {
+        return (row >= 0) && (row < GRID_HEIGHT) && (col >= 0) && (col < GRID_WIDTH);
     }
 
     /**

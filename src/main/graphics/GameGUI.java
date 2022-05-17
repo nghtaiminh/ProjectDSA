@@ -57,7 +57,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setLayout(null);
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -105,7 +105,6 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             mineField.updateMineField(row, col);
             mineFieldPanel.updateMineFieldPanel();
         }
-        // [TODO]: Check if the player has won after revealing a cell
         if (mineField.hasWon()){
             JOptionPane.showMessageDialog(GameGUI.this,"You won");
         };
