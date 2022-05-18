@@ -244,4 +244,7 @@ public class MineField implements Serializable {
     public Cell[][] getListCell() {
         return mineField;
     }
+    public boolean getFirstClick(){
+        return firstClick;
+    }
 }

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class ControlPanel extends JPanel implements ICommon{
     // [TODO]: Display remaining mines, time
-    Clock clock = new Clock();
+    
     
     // [TODO]: Restart button
     
@@ -18,11 +18,11 @@ public class ControlPanel extends JPanel implements ICommon{
     // [TODO]: Select difficulty
     LeaderBoard leaderBoard = new LeaderBoard();
     private JButton btUndo, btRestart, btLeaderBoard;
-    private JLabel lbTime, lbRemainingMines;
+    private JLabel lbTime, lbRemainingMines, lbTimer;
     private Timer timer;
     private JComboBox cbSelectedLevel;
     private ITrans listener;
-
+    int x = 0;
     public ControlPanel() {
         initComponent();
         addComponent();
@@ -59,6 +59,10 @@ public class ControlPanel extends JPanel implements ICommon{
         lbTime.setBounds(310 + 5*2,0,100,30);
         add(lbTime);
 
+        lbTimer = new JLabel();
+        lbTimer.setBounds(350 + 5*2,0,100,30);
+        add(lbTimer);
+
     }
 
     @Override
@@ -85,7 +89,17 @@ public class ControlPanel extends JPanel implements ICommon{
                 listener.changeLevel(level);
             }
         });
-
+        timer = new Timer(1000, new  ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lbTimer.setText(String.valueOf(x));
+                x++;
+            }
+        });
+        //TODO: Check first click before starting the timer
+        
+        timer.start();
+        
     }
 
     public void addListener(ITrans event) {

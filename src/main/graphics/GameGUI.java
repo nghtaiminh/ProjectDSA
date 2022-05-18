@@ -37,19 +37,6 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         addEvent();
     }
 
-//    public void setTimer(){
-//        timer = new Timer(1000, new ActionListener(){
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // TODO Auto-generated method stub
-//                second++;
-//
-//                timerButton.setText("" + second);
-//            }
-//
-//        });
-//    }
 
     @Override
     public void initComponent() {
@@ -121,6 +108,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public void restart() {
         mineField = new MineField(level);
         mineFieldPanel.updateMineFieldPanel();
+        
     }
 
     @Override

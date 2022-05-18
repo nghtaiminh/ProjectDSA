@@ -54,4 +54,5 @@ public class Clock extends JLabel {
         go = false;
         setText("0");
     }
+    
 }
