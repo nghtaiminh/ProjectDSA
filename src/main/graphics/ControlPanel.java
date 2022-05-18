@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 public class ControlPanel extends JPanel implements ICommon{
     // [TODO]: Display remaining mines, time
+    Clock clock = new Clock();
     
     // [TODO]: Restart button
     
