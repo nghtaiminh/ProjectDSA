@@ -15,6 +15,7 @@ public class ControlPanel extends JPanel implements ICommon{
     
     // [TODO]: Leaderboard button
 
+
     // [TODO]: Select difficulty
     LeaderBoard leaderBoard = new LeaderBoard();
     private JButton btUndo, btRestart, btLeaderBoard;
