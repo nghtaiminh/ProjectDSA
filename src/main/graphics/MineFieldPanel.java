@@ -13,11 +13,15 @@ import java.awt.event.MouseEvent;
 public class MineFieldPanel extends JPanel implements ICommon{
     private static final long serialVersionUID = -6403941308246651773L;
     private Difficulty difficulty;
+    public int WIDTH;
+    public int HEIGHT;
     private Label[][] lbCells;
     private ITrans listener;
 
     public MineFieldPanel(Difficulty difficulty) {
         this.difficulty = difficulty;
+        this.WIDTH = difficulty.getGridWidth();
+        this.HEIGHT = difficulty.getGridHeight();
         initComponent();
         addComponent();
         addEvent();
