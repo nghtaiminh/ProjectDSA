@@ -1,11 +1,12 @@
+package main.core;
 import javax.swing.*;
 import java.awt.*;
 
-public class Timer extends JLabel {
+public class Clock extends JLabel {
     private boolean go;
     private Runnable task;
 
-    public Timer() {
+    public Clock() {
         super("0", SwingConstants.CENTER);
         setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
