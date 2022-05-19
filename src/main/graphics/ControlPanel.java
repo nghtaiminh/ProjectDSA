@@ -77,7 +77,7 @@ public class ControlPanel extends JPanel implements ICommon{
                 //Limit undo 
                 count++;
                 if(count == 3){
-                    btUndo.setVisible(false);
+                    btUndo.setEnabled(false);
                 }
             }
         });
@@ -114,5 +114,10 @@ public class ControlPanel extends JPanel implements ICommon{
 
     public int getTime() {
         return time;
+    }
+
+    public void restartTimer() {
+        this.time = 0;
+        lbTimer.setText(String.valueOf(time));
     }
 }

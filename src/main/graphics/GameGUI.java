@@ -117,6 +117,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     @Override
     public void restart() {
         mineField = new MineField(level);
+        controlPanel.stopTimer();
+        controlPanel.restartTimer();
         mineFieldPanel.updateMineFieldPanel();
         
     }
