@@ -74,6 +74,8 @@ public class ControlPanel extends JPanel implements ICommon{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 listener.restart();
+
+                //Restart Timer
                 timer.stop();
                 x = 0;
                 timer = new Timer(1000, new  ActionListener() {
