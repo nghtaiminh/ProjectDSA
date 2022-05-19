@@ -3,21 +3,13 @@ import main.core.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.TimerTask;
 public class ControlPanel extends JPanel implements ICommon{
     // [TODO]: Display remaining mines, time
-    
-    
-    // [TODO]: Restart button
-    
     // [TODO]: Leaderboard button
-
-
-    // [TODO]: Select difficulty
     LeaderBoard leaderBoard = new LeaderBoard();
     private JButton btUndo, btRestart, btLeaderBoard;
     private JLabel lbTime, lbRemainingMines, lbTimer;
@@ -25,7 +17,7 @@ public class ControlPanel extends JPanel implements ICommon{
     private TimerTask tTask;
     private JComboBox cbSelectedLevel;
     private ITrans listener;
-    int x = 0, count = 0;
+    int time = 0, count = 0;
     public ControlPanel() {
         initComponent();
         addComponent();
@@ -74,18 +66,6 @@ public class ControlPanel extends JPanel implements ICommon{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 listener.restart();
-
-                //Restart Timer
-                timer.stop();
-                x = 0;
-                timer = new Timer(1000, new  ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        lbTimer.setText(String.valueOf(x));
-                        x++;
-                    }
-                });
-                timer.start();
             }
         });
 
@@ -110,20 +90,29 @@ public class ControlPanel extends JPanel implements ICommon{
                 listener.changeLevel(level);
             }
         });
+
         timer = new Timer(1000, new  ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                lbTimer.setText(String.valueOf(x));
-                x++;
+                lbTimer.setText(String.valueOf(time));
+                time++;
             }
         });
-        //TODO: Check first click before starting the timer
-        
-        
     }
 
     public void addListener(ITrans event) {
         listener = event;
+    }
+
+    public void startTimer() {
         timer.start();
+    }
+
+    public void stopTimer() {
+        timer.stop();
+    }
+
+    public int getTime() {
+        return time;
     }
 }

@@ -89,13 +89,23 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     @Override
     public void updateMineField(int row, int col) {
         if (mineField.getMineFieldStatus() == MineFieldStatus.NOT_CLEARED) {
+            // Start timer after first click
+            if (mineField.getFirstClick()) {
+                controlPanel.startTimer();
+            }
+
             mineField.updateMineField(row, col);
             mineFieldPanel.updateMineFieldPanel();
         }
-        // [TODO]: Check if the player has won after revealing a cell
-        if (mineField.hasWon()){
-            JOptionPane.showMessageDialog(GameGUI.this,"You won");
-        };
+
+        if (mineField.getMineFieldStatus() == MineFieldStatus.CLEARED){
+            controlPanel.stopTimer();
+            JOptionPane.showMessageDialog(GameGUI.this,"You won!");
+        }
+        else if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
+            controlPanel.stopTimer();
+            JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
+        }
     }
 
     @Override
@@ -114,6 +124,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     @Override
     public void undo() {
         mineField.undo();
+        controlPanel.startTimer();
         mineFieldPanel.updateMineFieldPanel();
     }
 
