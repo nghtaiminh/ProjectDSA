@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.TimerTask;
 public class ControlPanel extends JPanel implements ICommon{
     // [TODO]: Display remaining mines, time
     
@@ -21,9 +22,10 @@ public class ControlPanel extends JPanel implements ICommon{
     private JButton btUndo, btRestart, btLeaderBoard;
     private JLabel lbTime, lbRemainingMines, lbTimer;
     private Timer timer;
+    private TimerTask tTask;
     private JComboBox cbSelectedLevel;
     private ITrans listener;
-    int x = 0;
+    int x = 0, count = 0;
     public ControlPanel() {
         initComponent();
         addComponent();
@@ -72,6 +74,16 @@ public class ControlPanel extends JPanel implements ICommon{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 listener.restart();
+                timer.stop();
+                x = 0;
+                timer = new Timer(1000, new  ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        lbTimer.setText(String.valueOf(x));
+                        x++;
+                    }
+                });
+                timer.start();
             }
         });
 
@@ -79,6 +91,12 @@ public class ControlPanel extends JPanel implements ICommon{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 listener.undo();
+
+                //Limit undo 
+                count++;
+                if(count == 3){
+                    btUndo.setVisible(false);
+                }
             }
         });
 
@@ -99,11 +117,11 @@ public class ControlPanel extends JPanel implements ICommon{
         });
         //TODO: Check first click before starting the timer
         
-        timer.start();
         
     }
 
     public void addListener(ITrans event) {
         listener = event;
+        timer.start();
     }
 }
