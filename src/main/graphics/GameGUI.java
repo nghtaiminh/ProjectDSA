@@ -104,6 +104,9 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         }
         else if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
             controlPanel.stopTimer();
+            if (controlPanel.getUndoLimit() > 0){
+                controlPanel.setBtUndoVisible(true);
+            }
             JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
         }
     }
@@ -117,17 +120,21 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     @Override
     public void restart() {
         mineField = new MineField(level);
-        controlPanel.stopTimer();
         controlPanel.restartTimer();
+        controlPanel.restartUndoLimit();
         mineFieldPanel.updateMineFieldPanel();
         
     }
 
     @Override
     public void undo() {
-        mineField.undo();
-        controlPanel.startTimer();
-        mineFieldPanel.updateMineFieldPanel();
+        if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
+            mineField.undo();
+            controlPanel.startTimer();
+            controlPanel.updateUndoCount();
+            controlPanel.setBtUndoVisible(false);
+            mineFieldPanel.updateMineFieldPanel();
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ public class ControlPanel extends JPanel implements ICommon{
     private TimerTask tTask;
     private JComboBox cbSelectedLevel;
     private ITrans listener;
-    int time = 0, count = 0;
+    int time = 0, undoLimit = 3;
     public ControlPanel() {
         initComponent();
         addComponent();
@@ -37,10 +37,11 @@ public class ControlPanel extends JPanel implements ICommon{
         add(cbSelectedLevel);
 
 //        Image imgUndo = new ImageIcon(getClass().getResource("/main/assets/img/undo.png")).getImage();
-        btUndo = new JButton("Undo");
+        btUndo = new JButton(String.format("Undo (%d)", undoLimit));
         btUndo.setBounds(110,0,100,30);
 //        Icon iUndo = new ImageIcon(imgUndo.getScaledInstance(btRestart.getWidth(), btRestart.getHeight(), Image.SCALE_SMOOTH));
 //        btUndo.setIcon(iUndo);
+        btUndo.setEnabled(false);
         add(btUndo);
 
 //        Image imgSmile = new ImageIcon(getClass().getResource("/main/assets/img/smile.png")).getImage();
@@ -74,9 +75,7 @@ public class ControlPanel extends JPanel implements ICommon{
             public void actionPerformed(ActionEvent actionEvent) {
                 listener.undo();
 
-                //Limit undo 
-                count++;
-                if(count == 3){
+                if(undoLimit == 0){
                     btUndo.setEnabled(false);
                 }
             }
@@ -117,7 +116,26 @@ public class ControlPanel extends JPanel implements ICommon{
     }
 
     public void restartTimer() {
+        timer.stop();
         this.time = 0;
         lbTimer.setText(String.valueOf(time));
+    }
+
+    public void restartUndoLimit() {
+        this.undoLimit = 3;
+        btUndo.setText(String.format("Undo (%d)", undoLimit));
+    }
+
+    public void updateUndoCount() {
+        undoLimit--;
+        btUndo.setText(String.format("Undo (%d)", undoLimit));
+    }
+
+    public int getUndoLimit() {
+        return undoLimit;
+    }
+
+    public void setBtUndoVisible(Boolean bool) {
+        btUndo.setEnabled(bool);
     }
 }
