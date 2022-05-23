@@ -112,7 +112,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             }
             Thread.sleep(672);//Delay 0.672s before playing the game over audio
             audio.PlayGameOver();//Invoke game over audio after the you lose message
-            JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
+            JOptionPane.showMessageDialog(GameGUI.this,"You lose!","Minesweeper",
+            JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
