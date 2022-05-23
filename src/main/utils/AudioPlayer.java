@@ -11,14 +11,18 @@ public class AudioPlayer {
     //Declare audio files location
     private String gameoverPath = "main/assets/sound" + File.separator + "gameover.wav";
     private String explodePath = "main/assets/sound" + File.separator + "explode.wav";
-    private Clip gameoverSound;
-    private Clip explodeSound;
+    private String victoryPath = "main/assets/sound" + File.separator + "victory.wav";
+    private Clip gameoverSound, explodeSound, victorySound;
+    
+   
     public AudioPlayer(){
             try {
                 gameoverSound = AudioSystem.getClip();
                 explodeSound = AudioSystem.getClip();
+                victorySound = AudioSystem.getClip();
                 gameoverSound.open(AudioSystem.getAudioInputStream(new File(gameoverPath).getAbsoluteFile()));
                 explodeSound.open(AudioSystem.getAudioInputStream(new File(explodePath).getAbsoluteFile()));
+                victorySound.open(AudioSystem.getAudioInputStream(new File(victoryPath).getAbsoluteFile()));
             }
             //Exceptions handling for audio file types
             catch (LineUnavailableException ex) {
@@ -36,5 +40,9 @@ public class AudioPlayer {
     public void PlayExplode(){
         explodeSound.setFramePosition(0);//Implement to play the explode audio again when the method is called
         explodeSound.start();//Play audio when the method is called
+    }
+    public void PlayVictory(){
+        victorySound.setFramePosition(0);//Implement to play the explode audio again when the method is called
+        victorySound.start();//Play audio when the method is called
     }
 }
