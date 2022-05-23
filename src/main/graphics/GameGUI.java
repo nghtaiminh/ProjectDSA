@@ -102,7 +102,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         if (mineField.getMineFieldStatus() == MineFieldStatus.CLEARED){
             controlPanel.stopTimer();
-            JOptionPane.showMessageDialog(GameGUI.this,"You won!");
+            JOptionPane.showMessageDialog(GameGUI.this,"You won!","Minesweeper",
+            JOptionPane.INFORMATION_MESSAGE);
         }
         else if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
             controlPanel.stopTimer();
@@ -112,7 +113,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             }
             Thread.sleep(672);//Delay 0.672s before playing the game over audio
             audio.PlayGameOver();//Invoke game over audio after the you lose message
-            JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
+            JOptionPane.showMessageDialog(GameGUI.this,"You lose!","Minesweeper",
+            JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
