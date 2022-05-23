@@ -13,6 +13,7 @@ import javax.swing.Timer;
 import main.core.Cell;
 import main.core.MineField;
 import main.enums.Difficulty;
+import main.utils.AudioPlayer;
 
 public class GameGUI extends JFrame implements ICommon, ITrans {
     private static final long serialVersionUID = -5479701518838741039L;
@@ -28,7 +29,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     private MineField mineField;
     private MineFieldPanel mineFieldPanel;
     private ControlPanel controlPanel;
-
+    private static AudioPlayer audio = new AudioPlayer();
 
     public GameGUI(){
         mineField = new MineField(level);
@@ -104,9 +105,11 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         }
         else if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
             controlPanel.stopTimer();
+            audio.PlayExplode();//Invoke explode audio when a mine cell is clicked
             if (controlPanel.getUndoLimit() > 0){
                 controlPanel.setBtUndoVisible(true);
             }
+            audio.PlayGameOver();//Invoke game over audio after the you lose message
             JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
         }
     }
