@@ -102,7 +102,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         if (mineField.getMineFieldStatus() == MineFieldStatus.CLEARED){
             controlPanel.stopTimer();
-            JOptionPane.showMessageDialog(GameGUI.this,"You won!");
+            JOptionPane.showMessageDialog(GameGUI.this,"You won!","Minesweeper",
+            JOptionPane.INFORMATION_MESSAGE);
         }
         else if (mineField.getMineFieldStatus() == MineFieldStatus.EXPLODED) {
             controlPanel.stopTimer();
