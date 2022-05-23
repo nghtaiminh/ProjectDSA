@@ -61,7 +61,12 @@ public class MineFieldPanel extends JPanel implements ICommon{
                         Label label = (Label) e.getComponent();
                         // Left click to reveal a cell. Right click to set/remove flag
                         if (e.getButton() == MouseEvent.BUTTON1) { // Left-click
-                            listener.updateMineField(label.row, label.col);
+                            try {
+                                listener.updateMineField(label.row, label.col);
+                            } catch (InterruptedException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
                         } else if (e.getButton() == MouseEvent.BUTTON3) { // Right-click
                             listener.setOrRemoveFlag(label.row, label.col);
                         }

@@ -77,6 +77,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             if (out == JOptionPane.YES_OPTION) {
                 dispose();
             }
+            else setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);//Return to the game interface
         }
         };
         addWindowListener(wd);
@@ -88,7 +89,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     }
 
     @Override
-    public void updateMineField(int row, int col) {
+    public void updateMineField(int row, int col) throws InterruptedException {
         if (mineField.getMineFieldStatus() == MineFieldStatus.NOT_CLEARED) {
             // Start timer after first click
             if (mineField.getFirstClick()) {
@@ -109,6 +110,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             if (controlPanel.getUndoLimit() > 0){
                 controlPanel.setBtUndoVisible(true);
             }
+            Thread.sleep(672);//Delay 0.672s before playing the game over audio
             audio.PlayGameOver();//Invoke game over audio after the you lose message
             JOptionPane.showMessageDialog(GameGUI.this,"You lose!");
         }
