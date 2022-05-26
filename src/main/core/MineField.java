@@ -15,7 +15,7 @@ public class MineField implements Serializable {
     public final int GRID_WIDTH;
     public final int GRID_HEIGHT;
     private final int numMines;
-    private int remainingMines;
+    private int remainingFlags;
     private boolean firstClick = true;
 
     private Cell[][] mineField;
@@ -31,7 +31,7 @@ public class MineField implements Serializable {
         this.GRID_WIDTH = difficulty.getGridWidth();
         this.GRID_HEIGHT = difficulty.getGridHeight();
         this.numMines = difficulty.getNumberOfMines();
-        this.remainingMines = difficulty.getNumberOfMines();
+        this.remainingFlags = difficulty.getNumberOfMines();
         mineField = new Cell[GRID_HEIGHT][GRID_WIDTH];
 
         createEmptyMineField();
@@ -224,12 +224,12 @@ public class MineField implements Serializable {
     }
 
     public void setOrRemoveFlag(int row, int col) {
-        if (mineField[row][col].isHidden()) {
+        if (mineField[row][col].isHidden() && remainingFlags > 0) {
             mineField[row][col].setCellStatus(CellStatus.FLAGGED);
-            remainingMines--;
+            remainingFlags--;
         } else if (mineField[row][col].isFlagged()) {
             mineField[row][col].setCellStatus(CellStatus.HIDDEN);
-            remainingMines++;
+            remainingFlags++;
         }
     }
 
@@ -237,8 +237,8 @@ public class MineField implements Serializable {
        return mineFieldStatus;
     }
 
-    public int getRemainingMines() {
-        return remainingMines;
+    public int getRemainingFlags() {
+        return remainingFlags;
     }
 
     public Cell[][] getListCell() {
