@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 public class AudioPlayer {
     //Declare audio files location
-    private String gameoverPath = "main/assets/sound" + File.separator + "gameover.wav";
-    private String explodePath = "main/assets/sound" + File.separator + "explode.wav";
-    private String victoryPath = "main/assets/sound" + File.separator + "victory.wav";
+    private String gameoverPath = "src/main/assets/sound" + File.separator + "gameover.wav";
+    private String explodePath = "src/main/assets/sound" + File.separator + "explode.wav";
+    private String victoryPath = "src/main/assets/sound" + File.separator + "victory.wav";
     private Clip gameoverSound, explodeSound, victorySound;
     
    

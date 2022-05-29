@@ -58,6 +58,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public void addComponent() {
         controlPanel = new ControlPanel();
         controlPanel.setBounds(margin, margin, FRAME_WIDTH - margin*2, 60);
+        controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
+        controlPanel.setTime("0");
         add(controlPanel);
         controlPanel.addListener(this);
 
@@ -122,6 +124,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public void setOrRemoveFlag(int row, int col) {
         mineField.setOrRemoveFlag(row, col);
         mineFieldPanel.updateMineFieldPanel();
+        controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
     }
 
     @Override
@@ -129,6 +132,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         mineField = new MineField(level);
         controlPanel.restartTimer();
         controlPanel.restartUndoLimit();
+        controlPanel.setTime("0");
+        controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
         mineFieldPanel.updateMineFieldPanel();
         
     }
@@ -162,6 +167,9 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
             mineField = new MineField(Difficulty.HARD);
             initAll(Difficulty.HARD);
         }
+
+        controlPanel.setTime("0");
+        controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
     }
 
     public void initAll(Difficulty difficulty){

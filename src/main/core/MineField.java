@@ -32,7 +32,7 @@ public class MineField implements Serializable {
         this.GRID_HEIGHT = difficulty.getGridHeight();
         this.numMines = difficulty.getNumberOfMines();
         this.remainingFlags = difficulty.getNumberOfMines();
-        mineField = new Cell[GRID_HEIGHT][GRID_WIDTH];
+        this.mineField = new Cell[GRID_HEIGHT][GRID_WIDTH];
 
         createEmptyMineField();
     }
@@ -96,13 +96,14 @@ public class MineField implements Serializable {
      * @return
      */
     public int[] updateMineField(int clickedRow, int clickedCol) {
+        // Generate mines after the first click
         if(firstClick){
             generateMines(clickedRow, clickedCol);
             generateMineNumber();
             firstClick = false;
             updateMineField(clickedRow, clickedCol);
         }
-
+        // Store the current state of minefield
         prevMineField = SerializationUtils.clone(mineField);
 
         if (mineField[clickedRow][clickedCol].isFlagged())
