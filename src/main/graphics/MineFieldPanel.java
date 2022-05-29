@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 
 import main.core.Cell;
 import main.enums.Difficulty;
+import main.utils.ImageLoader;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,6 +14,7 @@ import java.awt.event.MouseEvent;
 public class MineFieldPanel extends JPanel implements ICommon{
     private static final long serialVersionUID = -6403941308246651773L;
     private Difficulty difficulty;
+    private ImageLoader imageLoader;
     public int WIDTH;
     public int HEIGHT;
     private Label[][] lbCells;
@@ -22,6 +24,8 @@ public class MineFieldPanel extends JPanel implements ICommon{
         this.difficulty = difficulty;
         this.WIDTH = difficulty.getGridWidth();
         this.HEIGHT = difficulty.getGridHeight();
+
+        imageLoader = new ImageLoader();
         initComponent();
         addComponent();
         addEvent();
@@ -42,8 +46,7 @@ public class MineFieldPanel extends JPanel implements ICommon{
                 lbCells[row][col].setHorizontalAlignment(JButton.CENTER);
                 lbCells[row][col].setVerticalAlignment(JButton.CENTER);
                 add(lbCells[row][col]);
-                Image image = new ImageIcon(getClass().getResource("/main/assets/img/hidden.png")).getImage();
-                Icon icon = new ImageIcon(image);
+                ImageIcon icon = new ImageIcon(imageLoader.getListImage().get("hidden"));
                 lbCells[row][col].setIcon(icon);
             }
         }
@@ -84,25 +87,25 @@ public class MineFieldPanel extends JPanel implements ICommon{
         Cell[][] listCell = listener.getListCell();
         for (int row = 0; row < difficulty.getGridHeight(); row++) {
             for (int col = 0; col < difficulty.getGridWidth(); col++) {
-                Image image;
+                ImageIcon icon;
 
                 if (listCell[row][col].isHidden()) {
-                    image = new ImageIcon(getClass().getResource("/main/assets/img/hidden.png")).getImage();
+                    icon = new ImageIcon(imageLoader.getListImage().get("hidden"));
                 }
                 else if (listCell[row][col].isFlagged()) {
-                    image = new ImageIcon(getClass().getResource("/main/assets/img/flag.png")).getImage();
+                    icon = new ImageIcon(imageLoader.getListImage().get("flag"));
                 }
                 else {
                     int numAdjacentMines = listCell[row][col].getNumAdjacentMines();
                     if (listCell[row][col].isMine() ) {
-                        image = new ImageIcon(getClass().getResource("/main/assets/img/exploded_mine.png")).getImage();
+                        icon = new ImageIcon(imageLoader.getListImage().get("exploded_mine"));
                     }
                     else {
-                        image = new ImageIcon(getClass().getResource("/main/assets/img/" + Integer.toString(numAdjacentMines) + ".png")).getImage();
+                        icon = new ImageIcon(imageLoader.getListImage().get(Integer.toString(numAdjacentMines)));
                     }
                 }
-                Icon icon = new ImageIcon(image.getScaledInstance(lbCells[row][col].getWidth(), lbCells[row][col].getHeight(), Image.SCALE_SMOOTH));
-                lbCells[row][col].setIcon(icon);
+                Icon renderedIcon = new ImageIcon(icon.getImage().getScaledInstance(lbCells[row][col].getWidth(), lbCells[row][col].getHeight(), Image.SCALE_SMOOTH));
+                lbCells[row][col].setIcon(renderedIcon);
             }
         }
 
