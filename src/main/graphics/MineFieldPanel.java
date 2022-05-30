@@ -16,7 +16,7 @@ public class MineFieldPanel extends JPanel implements ICommon{
 
     public int WIDTH;
     public int HEIGHT;
-    private static final int cellSize = 40;
+    private static final int cellSize = 35;
     private static final int border = 2;
 
     private Difficulty difficulty;
