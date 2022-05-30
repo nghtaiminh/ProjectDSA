@@ -17,22 +17,27 @@ import main.utils.AudioPlayer;
 
 public class GameGUI extends JFrame implements ICommon, ITrans {
     private static final long serialVersionUID = -5479701518838741039L;
-    private static Difficulty level = Difficulty.EASY;
     private static final String TITLE = "Minesweeper";
-    private static final int cellSize = 50;
-    private static final int border = 2;
 
     private static final int margin = 10;
-    private static int FRAME_WIDTH = cellSize * level.getGridWidth() + margin*2 + level.getGridWidth()*border*2;
-    private static int FRAME_HEIGHT = cellSize * level.getGridHeight() + margin*3 + level.getGridHeight()*border*2 + 60;
+    private static int FRAME_WIDTH;
+    private static int FRAME_HEIGHT;
 
     private MineField mineField;
     private MineFieldPanel mineFieldPanel;
     private ControlPanel controlPanel;
     private static AudioPlayer audio = new AudioPlayer();
+    private Difficulty level;
 
-    public GameGUI(){
-        mineField = new MineField(level);
+    public GameGUI(Difficulty level){
+        this.mineField = new MineField(level);
+        this.mineFieldPanel = new MineFieldPanel(level);
+        this.controlPanel = new ControlPanel(mineFieldPanel.WIDTH);
+        this.level = level;
+
+        FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
+        FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 +4;
+
         initComponent();
         addComponent();
         addEvent();
@@ -44,7 +49,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         this.setTitle(TITLE);
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         try {
@@ -56,15 +61,14 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
     @Override
     public void addComponent() {
-        controlPanel = new ControlPanel();
-        controlPanel.setBounds(margin, margin, FRAME_WIDTH - margin*2, 60);
+        controlPanel.setBounds(margin, margin, controlPanel.WIDTH, controlPanel.HEIGHT);
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
         controlPanel.setTime("0");
+        controlPanel.restartUndoLimit();
         add(controlPanel);
         controlPanel.addListener(this);
 
-        mineFieldPanel = new MineFieldPanel(level);
-        mineFieldPanel.setBounds(margin, margin*2 + 60, FRAME_WIDTH - margin*2, FRAME_HEIGHT - margin*3 - 60);
+        mineFieldPanel.setBounds(margin, controlPanel.HEIGHT + margin, mineFieldPanel.WIDTH, mineFieldPanel.HEIGHT);
         add(mineFieldPanel);
         mineFieldPanel.addListener(this);
     }
@@ -104,6 +108,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         if (mineField.getMineFieldStatus() == MineFieldStatus.CLEARED){
             controlPanel.stopTimer();
+            Thread.sleep(672);//Delay 0.672s before playing the game over audio
+            audio.PlayVictory();
             JOptionPane.showMessageDialog(GameGUI.this,"You won!","Minesweeper",
             JOptionPane.INFORMATION_MESSAGE);
         }
@@ -153,30 +159,31 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public void changeLevel(String level) {
         getContentPane().removeAll();
         if (level.equals("Easy")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.EASY);
+            dispose();
             initAll(Difficulty.EASY);
         }
         else if (level.equals("Medium")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.MEDIUM);
+            dispose();
             initAll(Difficulty.MEDIUM);
         }
         else if (level.equals("Hard")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.HARD);
+            dispose();
             initAll(Difficulty.HARD);
         }
 
+        setVisible(true);
         controlPanel.setTime("0");
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
     }
 
-    public void initAll(Difficulty difficulty){
-        level = difficulty;
+    public void initAll(Difficulty level){
+        this.level = level;
         mineField = new MineField(level);
-        FRAME_HEIGHT = cellSize * difficulty.getGridHeight();
-        FRAME_WIDTH = cellSize * difficulty.getGridWidth();
+        mineFieldPanel = new MineFieldPanel(level);
+        controlPanel = new ControlPanel(mineFieldPanel.WIDTH);
+
+        FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
+        FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 + 4;
 
         initComponent();
         addComponent();

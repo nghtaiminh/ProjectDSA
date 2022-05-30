@@ -16,6 +16,7 @@ public class MineField implements Serializable {
     public final int GRID_HEIGHT;
     private final int numMines;
     private int remainingFlags;
+    private int numHiddenCells;
     private boolean firstClick = true;
 
     private Cell[][] mineField;
@@ -32,6 +33,7 @@ public class MineField implements Serializable {
         this.GRID_HEIGHT = difficulty.getGridHeight();
         this.numMines = difficulty.getNumberOfMines();
         this.remainingFlags = difficulty.getNumberOfMines();
+        this.numHiddenCells = difficulty.getGridHeight() * difficulty.getGridWidth();
         this.mineField = new Cell[GRID_HEIGHT][GRID_WIDTH];
 
         createEmptyMineField();
@@ -106,7 +108,7 @@ public class MineField implements Serializable {
         // Store the current state of minefield
         prevMineField = SerializationUtils.clone(mineField);
 
-        if (mineField[clickedRow][clickedCol].isFlagged())
+        if (mineField[clickedRow][clickedCol].isFlagged() || !mineField[clickedRow][clickedCol].isHidden())
             return new int[] {clickedRow, clickedCol};
 
         if (mineField[clickedRow][clickedCol].isMine() && mineField[clickedRow][clickedCol].isHidden()) {
@@ -128,6 +130,8 @@ public class MineField implements Serializable {
 
             if(mineField[curRow][curCol].getNumAdjacentMines() == 0) {
                 mineField[curRow][curCol].setCellStatus(CellStatus.OPENED);
+                numHiddenCells--;
+
                 // Visit all the neighbors of the current cell
                 for (int[] dir : directions) {
                     int nextRow = curRow + dir[0];
@@ -140,8 +144,15 @@ public class MineField implements Serializable {
                 }
             } else {
                 mineField[curRow][curCol].setCellStatus(CellStatus.OPENED);
+                numHiddenCells--;
             }
         }
+
+        // Check won
+        if (numHiddenCells == numMines)
+            mineFieldStatus = MineFieldStatus.CLEARED;
+        System.out.println(numHiddenCells);
+
         return new int[] {clickedRow, clickedCol};
     }
 
@@ -163,20 +174,6 @@ public class MineField implements Serializable {
         }
     }
 
-    public boolean hasWon() {
-        boolean isWon = true;
-        for (int row = 0; row < GRID_HEIGHT; row++) {
-            for (int col = 0; col < GRID_WIDTH; col++) {
-                if (!mineField[row][col].isMine() && mineField[row][col].isHidden())
-                    isWon = false;
-            }
-        }
-
-        if(isWon)
-            mineFieldStatus = MineFieldStatus.CLEARED;
-
-        return isWon;
-    }
 
     public void undo() {
         if (!firstClick){

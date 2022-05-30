@@ -1,6 +1,7 @@
 package main.graphics;
 
 import main.core.*;
+import main.enums.Difficulty;
 import main.utils.ImageLoader;
 
 import javax.swing.*;
@@ -10,6 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ControlPanel extends JPanel implements ICommon{
+
+    public static int WIDTH;
+    public static int HEIGHT = 100;
+
     private JButton btUndo, btRestart;
     private JLabel lbTimeIcon, lbTime, lbRemainingFlags, lbRemainingFlagsIcon;
     private Timer timer;
@@ -19,8 +24,10 @@ public class ControlPanel extends JPanel implements ICommon{
     private ImageLoader imageLoader;
 
     int time = 0, undoLimit = 3;
-    public ControlPanel() {
+
+    public ControlPanel(int width) {
         imageLoader = new ImageLoader();
+        WIDTH = width;
         initComponent();
         addComponent();
         addEvent();
@@ -53,7 +60,7 @@ public class ControlPanel extends JPanel implements ICommon{
         add(btRestart);
 
         lbTimeIcon = new JLabel();
-        lbTimeIcon.setBounds(330,0,30,30);
+        lbTimeIcon.setBounds(WIDTH/2 - 60,50,30,30);
         ImageIcon icTimer = new ImageIcon(imageLoader.getListImage().get("timer"));
         Icon renderedTimerIcon = new ImageIcon(icTimer.getImage().getScaledInstance(lbTimeIcon.getWidth(), lbTimeIcon.getHeight(), Image.SCALE_SMOOTH));
         lbTimeIcon.setIcon(renderedTimerIcon);
@@ -62,11 +69,11 @@ public class ControlPanel extends JPanel implements ICommon{
         lbTime = new JLabel();
         lbTime.setFont(font);
         lbTime.setText("0");
-        lbTime.setBounds(360,0,50,30);
+        lbTime.setBounds(WIDTH/2 - 30,50,30,30);
         add(lbTime);
 
         lbRemainingFlagsIcon = new JLabel();
-        lbRemainingFlagsIcon.setBounds(420, 0,30,30);
+        lbRemainingFlagsIcon.setBounds(WIDTH/2 + 30, 50,30,30);
         ImageIcon icFlag = new ImageIcon(imageLoader.getListImage().get("flag_icon"));
         Icon renderedFlag = new ImageIcon(icFlag.getImage().getScaledInstance(lbTimeIcon.getWidth(), lbTimeIcon.getHeight(), Image.SCALE_SMOOTH));
         lbRemainingFlagsIcon.setIcon(renderedFlag);
@@ -74,7 +81,7 @@ public class ControlPanel extends JPanel implements ICommon{
 
         lbRemainingFlags = new JLabel();
         lbRemainingFlags.setFont(font);
-        lbRemainingFlags.setBounds(445,0,30,30);
+        lbRemainingFlags.setBounds(WIDTH/2 + 60,50,30,30);
         add(lbRemainingFlags);
 
     }
