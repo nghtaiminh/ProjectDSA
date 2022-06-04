@@ -1,14 +1,12 @@
 package main.graphics;
 
-import javax.swing.*;
-
 import main.enums.MineFieldStatus;
 import org.apache.commons.lang3.builder.Diff;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javax.swing.Timer;
+import javax.swing.*;
 
 import main.core.Cell;
 import main.core.MineField;
@@ -32,8 +30,10 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public GameGUI(Difficulty level){
         this.mineField = new MineField(level);
         this.mineFieldPanel = new MineFieldPanel(level);
-        this.controlPanel = new ControlPanel(mineFieldPanel.WIDTH);
+        this.controlPanel = new ControlPanel();
         this.level = level;
+
+        this.controlPanel.resize(mineFieldPanel.WIDTH);
 
         FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
         FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 +4;
@@ -49,11 +49,11 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         this.setTitle(TITLE);
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setLocationRelativeTo(null);
-        this.setResizable(true);
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,7 +64,6 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         controlPanel.setBounds(margin, margin, controlPanel.WIDTH, controlPanel.HEIGHT);
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
         controlPanel.setTime("0");
-        controlPanel.restartUndoLimit();
         add(controlPanel);
         controlPanel.addListener(this);
 
@@ -172,7 +171,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         }
 
         setVisible(true);
-        controlPanel.setTime("0");
+        controlPanel.restartTimer();
+        controlPanel.restartUndoLimit();
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
     }
 
@@ -180,14 +180,13 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         this.level = level;
         mineField = new MineField(level);
         mineFieldPanel = new MineFieldPanel(level);
-        controlPanel = new ControlPanel(mineFieldPanel.WIDTH);
+        controlPanel.resize(mineFieldPanel.WIDTH);
 
         FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
         FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 + 4;
 
         initComponent();
         addComponent();
-        addEvent();
     }
 }
 

@@ -1,6 +1,5 @@
 package main.graphics;
 
-import main.core.*;
 import main.enums.Difficulty;
 import main.utils.ImageLoader;
 
@@ -20,14 +19,15 @@ public class ControlPanel extends JPanel implements ICommon{
     private Timer timer;
     private JComboBox cbSelectedLevel;
 
+    private Difficulty level;
     private ITrans listener;
     private ImageLoader imageLoader;
 
     int time = 0, undoLimit = 3;
 
-    public ControlPanel(int width) {
-        imageLoader = new ImageLoader();
-        WIDTH = width;
+    public ControlPanel() {
+        this.imageLoader = new ImageLoader();
+
         initComponent();
         addComponent();
         addEvent();
@@ -112,13 +112,14 @@ public class ControlPanel extends JPanel implements ICommon{
             public void actionPerformed(ActionEvent actionEvent) {
                 String level = cbSelectedLevel.getSelectedItem().toString();
                 listener.changeLevel(level);
+//                cbSelectedLevel.setSelectedItem(cbSelectedLevel.getSelectedItem());
             }
         });
 
         timer = new Timer(1000, new  ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (time <= 999 ) {
+                if (time <= 999 ) { // Limit time display
                     lbTime.setText(String.valueOf(time));
                     time++;
                 }
@@ -168,5 +169,13 @@ public class ControlPanel extends JPanel implements ICommon{
 
     public void setLbRemainingFlags(int nFlags) {
         lbRemainingFlags.setText(String.valueOf(nFlags));
+    }
+
+    public void resize(int width) {
+        this.WIDTH = width;
+        lbTimeIcon.setBounds(WIDTH/2 - 60,50,30,30);
+        lbTime.setBounds(WIDTH/2 - 30,50,30,30);
+        lbRemainingFlagsIcon.setBounds(WIDTH/2 + 30, 50,30,30);
+        lbRemainingFlags.setBounds(WIDTH/2 + 60,50,30,30);
     }
 }

@@ -116,7 +116,7 @@ public class MineField implements Serializable {
             mineFieldStatus = MineFieldStatus.EXPLODED;
             return new int[] {clickedRow, clickedCol};
         }
-
+         // Apply non-recursive implementation of BFS
         Queue<int[]> queue = new LinkedList<>();
         boolean[][] visitedCells = new boolean[GRID_HEIGHT][GRID_WIDTH];
 
@@ -151,7 +151,6 @@ public class MineField implements Serializable {
         // Check won
         if (numHiddenCells == numMines)
             mineFieldStatus = MineFieldStatus.CLEARED;
-        System.out.println(numHiddenCells);
 
         return new int[] {clickedRow, clickedCol};
     }
@@ -186,6 +185,13 @@ public class MineField implements Serializable {
         this.mineFieldStatus = status;
     }
 
+
+    /**
+     *  Check if a cell is within the minefield
+     * @param row
+     * @param col
+     * @return boolean
+     */
     public boolean isValidCell(int row, int col) {
         return (row >= 0) && (row < GRID_HEIGHT) && (col >= 0) && (col < GRID_WIDTH);
     }
