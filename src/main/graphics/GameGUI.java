@@ -1,14 +1,12 @@
 package main.graphics;
 
-import javax.swing.*;
-
 import main.enums.MineFieldStatus;
 import org.apache.commons.lang3.builder.Diff;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javax.swing.Timer;
+import javax.swing.*;
 
 import main.core.Cell;
 import main.core.MineField;
@@ -17,22 +15,29 @@ import main.utils.AudioPlayer;
 
 public class GameGUI extends JFrame implements ICommon, ITrans {
     private static final long serialVersionUID = -5479701518838741039L;
-    private static Difficulty level = Difficulty.EASY;
     private static final String TITLE = "Minesweeper";
-    private static final int cellSize = 50;
-    private static final int border = 2;
 
     private static final int margin = 10;
-    private static int FRAME_WIDTH = cellSize * level.getGridWidth() + margin*2 + level.getGridWidth()*border*2;
-    private static int FRAME_HEIGHT = cellSize * level.getGridHeight() + margin*3 + level.getGridHeight()*border*2 + 60;
+    private static int FRAME_WIDTH;
+    private static int FRAME_HEIGHT;
 
     private MineField mineField;
     private MineFieldPanel mineFieldPanel;
     private ControlPanel controlPanel;
     private static AudioPlayer audio = new AudioPlayer();
+    private Difficulty level;
 
-    public GameGUI(){
-        mineField = new MineField(level);
+    public GameGUI(Difficulty level){
+        this.mineField = new MineField(level);
+        this.mineFieldPanel = new MineFieldPanel(level);
+        this.controlPanel = new ControlPanel();
+        this.level = level;
+
+        this.controlPanel.resize(mineFieldPanel.WIDTH);
+
+        FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
+        FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 +4;
+
         initComponent();
         addComponent();
         addEvent();
@@ -48,7 +53,7 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,15 +61,13 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
     @Override
     public void addComponent() {
-        controlPanel = new ControlPanel();
-        controlPanel.setBounds(margin, margin, FRAME_WIDTH - margin*2, 60);
+        controlPanel.setBounds(margin, margin, controlPanel.WIDTH, controlPanel.HEIGHT);
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
         controlPanel.setTime("0");
         add(controlPanel);
         controlPanel.addListener(this);
 
-        mineFieldPanel = new MineFieldPanel(level);
-        mineFieldPanel.setBounds(margin, margin*2 + 60, FRAME_WIDTH - margin*2, FRAME_HEIGHT - margin*3 - 60);
+        mineFieldPanel.setBounds(margin, controlPanel.HEIGHT + margin, mineFieldPanel.WIDTH, mineFieldPanel.HEIGHT);
         add(mineFieldPanel);
         mineFieldPanel.addListener(this);
     }
@@ -104,6 +107,8 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
 
         if (mineField.getMineFieldStatus() == MineFieldStatus.CLEARED){
             controlPanel.stopTimer();
+            Thread.sleep(672);//Delay 0.672s before playing the game over audio
+            audio.PlayVictory();
             JOptionPane.showMessageDialog(GameGUI.this,"You won!","Minesweeper",
             JOptionPane.INFORMATION_MESSAGE);
         }
@@ -153,34 +158,35 @@ public class GameGUI extends JFrame implements ICommon, ITrans {
     public void changeLevel(String level) {
         getContentPane().removeAll();
         if (level.equals("Easy")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.EASY);
+            dispose();
             initAll(Difficulty.EASY);
         }
         else if (level.equals("Medium")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.MEDIUM);
+            dispose();
             initAll(Difficulty.MEDIUM);
         }
         else if (level.equals("Hard")) {
-            getContentPane().removeAll();
-            mineField = new MineField(Difficulty.HARD);
+            dispose();
             initAll(Difficulty.HARD);
         }
 
-        controlPanel.setTime("0");
+        setVisible(true);
+        controlPanel.restartTimer();
+        controlPanel.restartUndoLimit();
         controlPanel.setLbRemainingFlags(mineField.getRemainingFlags());
     }
 
-    public void initAll(Difficulty difficulty){
-        level = difficulty;
+    public void initAll(Difficulty level){
+        this.level = level;
         mineField = new MineField(level);
-        FRAME_HEIGHT = cellSize * difficulty.getGridHeight();
-        FRAME_WIDTH = cellSize * difficulty.getGridWidth();
+        mineFieldPanel = new MineFieldPanel(level);
+        controlPanel.resize(mineFieldPanel.WIDTH);
+
+        FRAME_WIDTH = mineFieldPanel.WIDTH +  margin*3 + 4;
+        FRAME_HEIGHT = mineFieldPanel.HEIGHT + controlPanel.HEIGHT + margin*5 + 4;
 
         initComponent();
         addComponent();
-        addEvent();
     }
 }
 

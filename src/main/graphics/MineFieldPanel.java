@@ -13,17 +13,21 @@ import java.awt.event.MouseEvent;
 
 public class MineFieldPanel extends JPanel implements ICommon{
     private static final long serialVersionUID = -6403941308246651773L;
-    private Difficulty difficulty;
-    private ImageLoader imageLoader;
+
     public int WIDTH;
     public int HEIGHT;
+    private static final int cellSize = 35;
+    private static final int border = 2;
+
+    private Difficulty difficulty;
+    private ImageLoader imageLoader;
     private Label[][] lbCells;
     private ITrans listener;
 
     public MineFieldPanel(Difficulty difficulty) {
         this.difficulty = difficulty;
-        this.WIDTH = difficulty.getGridWidth();
-        this.HEIGHT = difficulty.getGridHeight();
+        this.WIDTH = difficulty.getGridWidth() * cellSize + difficulty.getGridWidth()*border*2;
+        this.HEIGHT = difficulty.getGridHeight() * cellSize + difficulty.getGridHeight()*border*2;
 
         imageLoader = new ImageLoader();
         initComponent();
@@ -36,7 +40,7 @@ public class MineFieldPanel extends JPanel implements ICommon{
     }
 
     public void addComponent() {
-        Border border = BorderFactory.createLineBorder(Color.GRAY,2);
+        Border border = BorderFactory.createLineBorder(Color.GRAY,1);
         lbCells = new Label[difficulty.getGridHeight()][difficulty.getGridWidth()];
 
         for (int row = 0; row < difficulty.getGridHeight(); row++) {
@@ -108,7 +112,6 @@ public class MineFieldPanel extends JPanel implements ICommon{
                 lbCells[row][col].setIcon(renderedIcon);
             }
         }
-
     }
 
     private class Label extends JLabel {
